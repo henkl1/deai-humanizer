@@ -1,4 +1,4 @@
 interface:
   display_name: "DeAI Humanizer"
-  short_description: "Rewrite and edit AI-looking images into realistic photography."
-  default_prompt: "Use DeAI Humanizer to make this image or prompt look like a realistic camera photograph."
+  short_description: "Naturalize AI-looking photos, faces, eyes, lighting, and texture."
+  default_prompt: "Use DeAI Humanizer to make this image or prompt look like a realistic camera photograph, including believable eyes and gaze when faces are visible."

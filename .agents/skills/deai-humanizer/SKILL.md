@@ -1,6 +1,6 @@
 ---
 name: deai-humanizer
-description: Improve AI-looking image prompts, existing image edit requests, portraits, graduation photos, ID/document photos, street/lifestyle shots, product photos, and interior images into realistic camera or phone photography. Use when the user asks to reduce plastic AI style, make an image look more natural/real, remove synthetic polish, lower over-saturation, fix over-smooth skin, generate a realistic photography prompt, or create practical edit instructions. Do not use for bypassing AI detectors, watermark/provenance/metadata removal, or restoring redacted private information.
+description: Improve AI-looking image prompts, existing image edit requests, portraits, graduation photos, ID/document photos, street/lifestyle shots, product photos, and interior images into realistic camera or phone photography. Use when the user asks to reduce plastic AI style, make an image look more natural/real, remove synthetic polish, lower over-saturation, fix over-smooth skin, correct empty or glassy eyes and rigid gaze, generate a realistic photography prompt, or create practical edit instructions. Do not use for bypassing AI detectors, watermark/provenance/metadata removal, or restoring redacted private information.
 ---
 
 # DeAI Humanizer
@@ -45,12 +45,13 @@ If local image processing was run, also include the output file path and the hig
 
 ## Quality Rules
 
-Load `references/realism-rules.md` when a scene needs detailed realism guidance or when revising outputs that still feel synthetic.
+Load `references/realism-rules.md` when a scene needs detailed realism guidance or when revising outputs that still feel synthetic. For any face with visible eyes, apply its `Eyes And Gaze` rules.
 
 Always include camera-realism cues:
 - 35mm or 50mm lens logic.
 - Imperfect available light.
 - Natural skin or material texture.
+- For visible eyes: layered iris and pupil detail, subtle tear-film sheen, light-consistent catchlights, a soft gaze, and natural under-eye shadows.
 - Subtle sensor noise or fine grain.
 - Candid or documentary composition.
 - Reduced saturation and restrained contrast.

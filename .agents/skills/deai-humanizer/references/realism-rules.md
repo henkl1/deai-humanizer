@@ -15,6 +15,18 @@
 - Avoid face reshaping, poreless beauty filters, mirror symmetry, and shadowless studio light.
 - Use 50mm portrait logic unless the scene clearly calls for a phone snapshot.
 
+## Eyes And Gaze
+
+Apply these rules whenever a face has visible eyes:
+
+- Diagnose synthetic eyes by looking for flat black pupils, missing iris variation, pure-white sclera, rigid or mirrored catchlights, a dry glassy surface, fixed straight-ahead staring, and missing lower-lid or under-eye shadows.
+- Keep layered iris texture and pupil tonal variation. Use naturally off-white sclera with restrained local color variation; do not exaggerate veins or redness.
+- Add a subtle moist tear-film or waterline sheen, especially along the lower lid. Keep it understated so the person does not look tearful unless the scene calls for that emotion.
+- Make catchlights small, soft, and consistent with the scene's actual window, street, or room light. Left and right reflections may differ slightly with eye angle and anatomy.
+- Preserve lower-lid structure, real under-eye shadow, mild skin variation, and slight fatigue when appropriate instead of erasing the whole eye area.
+- Use a soft, emotionally present gaze rather than a rigid, direct stare. Preserve the subject's intended identity, gaze direction, and expression.
+- Avoid glass eyes, doll-like eyes, pure-white eye whites, identical catchlights, featureless pupils, excessive wetness, or artificial tears.
+
 ## Graduation
 
 - Keep campus context, school signage, flowers, gown/cap, crowds, and background activity.

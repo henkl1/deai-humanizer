@@ -133,8 +133,8 @@ Rules:
 - Preserve the subject, identity cues, wardrobe, setting, activity, mood, and
   main objects unless the user explicitly asks to change them.
 - Soften AI-looking perfection: plastic skin, poreless faces, perfect lighting,
-  over-saturation, over-HDR, symmetry, render language, excessive sharpness, and
-  poster-like cleanliness.
+  empty or over-perfect eyes, over-saturation, over-HDR, symmetry, render
+  language, excessive sharpness, and poster-like cleanliness.
 - Use plausible camera logic: 35mm or 50mm lens, imperfect available light,
   real focus hierarchy, candid composition, natural shadows, material texture,
   slight grain/noise, reduced saturation, and restrained contrast.
@@ -167,6 +167,32 @@ AI_FEATURE_RULES: tuple[FeatureRule, ...] = (
         ),
         replacement_hint="natural skin texture with pores, small blemishes, and real shadow transitions",
         weight=0.22,
+    ),
+    FeatureRule(
+        name="empty_or_overperfect_eyes",
+        patterns=(
+            r"\b(?:empty|hollow|lifeless|dead|vacant)[-\s]?(?:looking\s+)?eyes?\b",
+            r"\b(?:blank|vacant|rigid|frozen|dead)\s+(?:stare|gaze)\b",
+            r"\b(?:glassy|glass-like|doll-like|uncanny|ai[-\s]?looking)\s+eyes?\b",
+            r"\b(?:pure|bright|unnaturally|perfectly)\s+white\s+(?:sclera|eye whites?)\b",
+            r"\b(?:identical|rigid|frozen|hard)\s+(?:eye\s+)?catchlights?\b",
+            r"\b(?:flat|solid|featureless)\s+(?:black\s+)?pupils?\b",
+            r"眼睛(?:空洞|呆滞|无神)",
+            r"(?:空洞|呆滞|无神)(?:的)?眼(?:睛|神)",
+            r"(?:直勾勾|僵硬)(?:的)?(?:注视|眼神|目光)",
+            r"眼白(?:太|过于|非常)?白",
+            r"(?:纯白|惨白)(?:的)?眼白",
+            r"(?:反光|高光|眼神光)(?:太|过于)?(?:僵硬|固定|对称)",
+            r"(?:瞳孔|虹膜)(?:没有|缺少|缺乏)(?:层次|细节)",
+            r"(?:只有|纯|全是)黑色瞳孔",
+            r"(?:假眼|玻璃眼|塑料眼珠)",
+        ),
+        replacement_hint=(
+            "detailed iris and pupil tonal variation, off-white sclera, subtle "
+            "tear-film sheen, natural light-consistent catchlights, soft gaze, "
+            "and real under-eye shadows"
+        ),
+        weight=0.17,
     ),
     FeatureRule(
         name="perfect_lighting",
@@ -303,20 +329,26 @@ PROMPT_TEMPLATES: Mapping[str, str] = {
     "portrait": (
         "Realistic portrait photograph of {subject}, shot on a {camera}, "
         "{composition}, {lighting}, natural skin texture with visible pores, "
-        "minor blemishes, real shadow transitions, slight hair flyaways, subtle "
-        "sensor noise and fine grain, reduced saturation and restrained contrast"
+        "minor blemishes, detailed irises and pupil tonal variation, off-white "
+        "sclera, subtle moist tear-film sheen, small light-consistent catchlights, "
+        "a soft non-staring gaze, real under-eye shadows, slight hair flyaways, "
+        "subtle sensor noise and fine grain, reduced saturation and restrained contrast"
         "{corrections}."
     ),
     "graduation": (
         "Realistic graduation photograph of {subject}, shot on a {camera}, "
         "{composition}, {lighting}, believable gown fabric folds, bouquet wrap, "
-        "hand pressure, ground shadows, natural skin texture, subtle sensor "
-        "noise and fine grain, reduced saturation in sky, flowers, and campus "
+        "hand pressure, ground shadows, natural skin texture, soft expressive "
+        "gaze with subtle tear-film sheen and light-consistent catchlights, "
+        "real under-eye shadows, subtle sensor noise and fine grain, reduced "
+        "saturation in sky, flowers, and campus "
         "colors{corrections}."
     ),
     "id_photo": (
         "Realistic ID-style photograph of {subject}, shot on a {camera}, "
-        "{composition}, {lighting}, natural skin texture, slight sensor noise, "
+        "{composition}, {lighting}, natural skin texture, detailed irises, "
+        "off-white sclera, subtle tear-film sheen, restrained catchlights, "
+        "neutral gaze and preserved under-eye shadows, slight sensor noise, "
         "reduced saturation, neutral background, practical document-photo "
         "realism, preserving all privacy redactions and never restoring hidden "
         "information{corrections}."
@@ -372,16 +404,19 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
         lighting="imperfect window light with mild shadow falloff",
         realism_rules=(
             "Keep pores, subtle skin unevenness, small blemishes, and real facial shadows.",
+            "Keep detailed irises, subtle tear-film sheen, light-consistent catchlights, and natural under-eye shadows.",
             "Let hair and clothing have slight flyaways, wrinkles, and natural clumps.",
             "Avoid beauty-filter reshaping and perfect symmetry.",
         ),
         edit_rules=(
             "Reduce plastic skin smoothing while keeping the person recognizable.",
+            "Replace flat pupils, pure-white sclera, and rigid catchlights with layered eye detail and a soft natural gaze.",
             "Lower excessive sharpening, saturation, and beauty-filter whitening.",
             "Unify face, hair, clothing, and background under one plausible light direction.",
         ),
         negative_rules=(
             "No poreless plastic skin or artificial beauty-filter face reshaping.",
+            "No glassy empty eyes, pure-white sclera, mirrored catchlights, or fixed straight-ahead stare.",
             "No shadowless studio-perfect lighting unless explicitly requested.",
             "No CGI, render, poster, or hyper-clean commercial sample look.",
         ),
@@ -411,11 +446,13 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
         realism_rules=(
             "Keep campus context, crowds, signage, gown fabric folds, flowers, and ground shadows.",
             "Tone down overly blue sky, neon flowers, and overly vivid academic robe colors.",
+            "Keep visible eyes moist but not tearful, with natural catchlights, iris detail, and soft emotional focus.",
             "Keep the subject attractive but not excessively retouched.",
         ),
         edit_rules=(
             "Reduce over-bright highlights and overly saturated campus colors.",
             "Make skin, hands, hair, gown edges, bouquet wrap, and shoes physically believable.",
+            "If the eyes are visible, restore subtle tear-film sheen, iris depth, natural catchlights, and under-eye shadows.",
             "Keep the candid graduation-day atmosphere instead of a poster-template look.",
         ),
         negative_rules=(
@@ -454,11 +491,13 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
         realism_rules=(
             "Preserve all redactions and never infer hidden names, numbers, addresses, or records.",
             "Keep card edges, lamination, paper or plastic texture, shadows, and hand pressure realistic.",
+            "Keep visible eyes neutral and anatomically detailed, with restrained catchlights and natural under-eye shadows.",
             "Use practical document-photo realism rather than a generated prop look.",
         ),
         edit_rules=(
             "Preserve and strengthen privacy masking; do not restore covered text or faces.",
             "Realize card thickness, edge shadows, lamination, and hand pressure.",
+            "If a face is visible, keep off-white sclera, iris detail, subtle tear-film sheen, and a neutral non-staring gaze.",
             "Keep phone close-up depth of field readable but naturally soft in the background.",
         ),
         negative_rules=(
@@ -1072,7 +1111,12 @@ def _remove_ai_descriptors_from_subject(text: str) -> str:
             flags=re.IGNORECASE,
         )
 
-    cleaned = re.sub(r"\b(?:with|and|in)\s*(?=,|，|$)", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(
+        r"\b(?:with|and|in)(?:\s+(?:a|an|the))?\s*(?=,|，|$)",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
     cleaned = re.sub(r"[,，]\s*(?:with|and|in)\s*[,，]", ", ", cleaned, flags=re.IGNORECASE)
     return _normalize_delimiters(cleaned)
 

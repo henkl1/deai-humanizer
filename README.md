@@ -2,13 +2,13 @@
 
 DeAI Humanizer is a small, dependency-light Python toolkit for rewriting AI-looking image prompts and image-edit requests into realistic photography directions.
 
-It focuses on visual quality: natural skin or material texture, imperfect available light, slight grain, candid composition, reduced saturation, believable shadows, and real camera logic.
+It focuses on visual quality: natural skin or material texture, believable eyes and gaze, imperfect available light, slight grain, candid composition, reduced saturation, believable shadows, and real camera logic.
 
 It is not a tool for bypassing AI detectors, removing watermarks, stripping metadata, hiding provenance, or reconstructing redacted private information.
 
 ## Features
 
-- Detects AI-looking prompt features such as plastic skin, perfect lighting, over-saturation, over-sharpening, symmetry, render jargon, and overly clean environments.
+- Detects AI-looking prompt features such as plastic skin, empty or over-perfect eyes, perfect lighting, over-saturation, over-sharpening, symmetry, render jargon, and overly clean environments.
 - Rewrites prompts into realistic camera photography prompts.
 - Builds paste-ready edit instructions for existing image editors.
 - Supports portrait, graduation, ID/document photo, street/lifestyle, product, interior, and generic scenes.

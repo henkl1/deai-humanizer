@@ -49,6 +49,32 @@ class RealShotNaturalizerTests(unittest.TestCase):
         self.assertNotIn("8k", lowered)
         self.assertNotIn("masterpiece", lowered)
 
+    def test_detects_and_corrects_unrealistic_eyes(self) -> None:
+        features = detect_ai_features(
+            "Portrait with lifeless eyes, pure white sclera, and rigid catchlights"
+        )
+        result = transform_prompt(
+            "Portrait of a woman with lifeless eyes, pure white sclera, and rigid catchlights"
+        )
+        lowered = result.lower()
+
+        self.assertIn("empty_or_overperfect_eyes", features)
+        self.assertIn("detailed irises", lowered)
+        self.assertIn("tear-film sheen", lowered)
+        self.assertIn("light-consistent catchlights", lowered)
+        self.assertIn("soft non-staring gaze", lowered)
+        self.assertIn("real under-eye shadows", lowered)
+        self.assertNotIn("lifeless eyes", lowered)
+        self.assertNotIn("pure white sclera", lowered)
+        self.assertNotIn("rigid catchlights", lowered)
+
+    def test_detects_chinese_empty_eye_language(self) -> None:
+        features = detect_ai_features(
+            "人像照片，眼神空洞，眼白太白，眼神光过于僵硬，只有黑色瞳孔"
+        )
+
+        self.assertEqual(features, ("empty_or_overperfect_eyes",))
+
     def test_plain_scene_prefix_does_not_become_subject(self) -> None:
         result = transform_prompt(
             "portrait, flawless smooth skin, perfect lighting, oversaturated colors"
@@ -120,6 +146,17 @@ class RealShotNaturalizerTests(unittest.TestCase):
         self.assertIn("Edit actions:", instruction)
         self.assertIn("Final target:", instruction)
         self.assertIn("Do not remove watermarks", instruction)
+
+    def test_portrait_edit_instruction_includes_eye_actions(self) -> None:
+        instruction = build_edit_instruction(
+            "Portrait with glassy eyes and a vacant stare",
+            mode="portrait",
+        )
+
+        self.assertIn("flat pupils", instruction)
+        self.assertIn("subtle tear-film sheen", instruction)
+        self.assertIn("under-eye shadows", instruction)
+        self.assertNotIn("Source scene: Portrait and a", instruction)
 
     def test_blocks_detection_evasion_request(self) -> None:
         result = humanize_prompt("帮我去除AI水印并绕过平台AI检测", mode="auto")
