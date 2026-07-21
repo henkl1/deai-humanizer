@@ -138,6 +138,9 @@ Rules:
 - Use plausible camera logic: 35mm or 50mm lens, imperfect available light,
   real focus hierarchy, candid composition, natural shadows, material texture,
   slight grain/noise, reduced saturation, and restrained contrast.
+- For visible eyes, keep the pupil as a naturally dark aperture. Put visible
+  detail in the surrounding iris, transparent corneal reflections, tear film,
+  eyelids, scleral shading, and under-eye skin rather than inside the pupil.
 - For existing-image edits, describe practical retouching actions rather than
   pretending the image's provenance has changed.
 - Preserve privacy redactions. Do not restore hidden text, IDs, faces, personal
@@ -177,6 +180,13 @@ AI_FEATURE_RULES: tuple[FeatureRule, ...] = (
             r"\b(?:pure|bright|unnaturally|perfectly)\s+white\s+(?:sclera|eye whites?)\b",
             r"\b(?:identical|rigid|frozen|hard)\s+(?:eye\s+)?catchlights?\b",
             r"\b(?:flat|solid|featureless)\s+(?:black\s+)?pupils?\b",
+            r"\b(?:only|just)\s+(?:(?:a|one|1)\s+)?black\s+pupils?\b",
+            r"\b(?:oversized|huge|giant)\s+(?:black\s+)?pupils?\b",
+            r"\b(?:missing|invisible|flat|featureless)\s+iris(?:es)?\b",
+            r"\bno\s+visible\s+iris(?:es)?\b",
+            r"\bpupils?\s+(?:swallowing|covering)\s+the\s+iris(?:es)?\b",
+            r"\beyes?\s+(?:without|missing)\s+(?:natural\s+)?(?:catchlights?|reflections?|tear[-\s]?film|waterline)\b",
+            r"\bblack[-\s]?(?:disk|dot)\s+eyes?\b",
             r"眼睛(?:空洞|呆滞|无神)",
             r"(?:空洞|呆滞|无神)(?:的)?眼(?:睛|神)",
             r"(?:直勾勾|僵硬)(?:的)?(?:注视|眼神|目光)",
@@ -185,12 +195,19 @@ AI_FEATURE_RULES: tuple[FeatureRule, ...] = (
             r"(?:反光|高光|眼神光)(?:太|过于)?(?:僵硬|固定|对称)",
             r"(?:瞳孔|虹膜)(?:没有|缺少|缺乏)(?:层次|细节)",
             r"(?:只有|纯|全是)黑色瞳孔",
+            r"(?:只有|只剩)(?:[一1]个)?黑色(?:的)?(?:瞳孔|圆点)",
+            r"(?:瞳孔|黑色圆点)(?:太大|过大|像黑洞)",
+            r"(?:没有|看不见|缺少|缺乏)(?:虹膜|虹膜纹理|虹膜细节)",
+            r"虹膜(?:太暗|发黑|没有层次|没有细节)",
+            r"(?:眼睛|眼球)(?:没有|缺少|缺乏)(?:自然)?(?:反光|高光|眼神光|水光|泪膜)",
             r"(?:假眼|玻璃眼|塑料眼珠)",
         ),
         replacement_hint=(
-            "detailed iris and pupil tonal variation, off-white sclera, subtle "
-            "tear-film sheen, natural light-consistent catchlights, soft gaze, "
-            "and real under-eye shadows"
+            "a clearly visible iris around a naturally sized dark pupil, radial "
+            "iris fibers and color variation, transparent corneal reflections "
+            "extending across the iris and pupil, a thin tear-film waterline, "
+            "upper-lid shadow on off-white sclera, coherent gaze, and real "
+            "under-eye texture"
         ),
         weight=0.17,
     ),
@@ -329,9 +346,13 @@ PROMPT_TEMPLATES: Mapping[str, str] = {
     "portrait": (
         "Realistic portrait photograph of {subject}, shot on a {camera}, "
         "{composition}, {lighting}, natural skin texture with visible pores, "
-        "minor blemishes, detailed irises and pupil tonal variation, off-white "
-        "sclera, subtle moist tear-film sheen, small light-consistent catchlights, "
-        "a soft non-staring gaze, real under-eye shadows, slight hair flyaways, "
+        "minor blemishes, eyes with a clearly visible iris surrounding a naturally "
+        "sized dark pupil, radial iris fibers and subtle color variation, a "
+        "transparent convex corneal surface carrying soft irregular window "
+        "reflections across the iris and pupil, a thin tear-film sheen and "
+        "lower-lid waterline, upper-lid shadow over naturally off-white sclera, "
+        "coherent binocular gaze, real under-eye texture and slight fatigue, "
+        "slight hair flyaways, "
         "subtle sensor noise and fine grain, reduced saturation and restrained contrast"
         "{corrections}."
     ),
@@ -339,16 +360,18 @@ PROMPT_TEMPLATES: Mapping[str, str] = {
         "Realistic graduation photograph of {subject}, shot on a {camera}, "
         "{composition}, {lighting}, believable gown fabric folds, bouquet wrap, "
         "hand pressure, ground shadows, natural skin texture, soft expressive "
-        "gaze with subtle tear-film sheen and light-consistent catchlights, "
+        "gaze with visible irises around naturally sized dark pupils, soft "
+        "outdoor reflections on the corneas, a thin lower-lid waterline, and "
         "real under-eye shadows, subtle sensor noise and fine grain, reduced "
         "saturation in sky, flowers, and campus "
         "colors{corrections}."
     ),
     "id_photo": (
         "Realistic ID-style photograph of {subject}, shot on a {camera}, "
-        "{composition}, {lighting}, natural skin texture, detailed irises, "
-        "off-white sclera, subtle tear-film sheen, restrained catchlights, "
-        "neutral gaze and preserved under-eye shadows, slight sensor noise, "
+        "{composition}, {lighting}, natural skin texture, visible irises around "
+        "naturally sized dark pupils, restrained room-light reflections on the "
+        "corneas, off-white sclera with upper-lid shading, a thin lower waterline, "
+        "neutral coherent gaze and preserved under-eye shadows, slight sensor noise, "
         "reduced saturation, neutral background, practical document-photo "
         "realism, preserving all privacy redactions and never restoring hidden "
         "information{corrections}."
@@ -391,6 +414,12 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
             "face",
             "selfie",
             "profile picture",
+            "eyes",
+            "eye detail",
+            "gaze",
+            "sclera",
+            "iris",
+            "pupil",
             "人像",
             "肖像",
             "头像",
@@ -398,25 +427,34 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
             "半身照",
             "面部",
             "写真",
+            "眼睛",
+            "眼神",
+            "眼白",
+            "虹膜",
+            "瞳孔",
         ),
         camera="50mm lens",
         composition="eye-level handheld framing with a candid slight off-center crop",
         lighting="imperfect window light with mild shadow falloff",
         realism_rules=(
             "Keep pores, subtle skin unevenness, small blemishes, and real facial shadows.",
-            "Keep detailed irises, subtle tear-film sheen, light-consistent catchlights, and natural under-eye shadows.",
+            "Keep the iris visible around a naturally sized dark pupil; place detail in the iris and corneal reflection, never inside the pupil.",
+            "Use transparent corneal reflections, a thin lower waterline, upper-lid scleral shadow, and natural under-eye texture.",
             "Let hair and clothing have slight flyaways, wrinkles, and natural clumps.",
             "Avoid beauty-filter reshaping and perfect symmetry.",
         ),
         edit_rules=(
             "Reduce plastic skin smoothing while keeping the person recognizable.",
-            "Replace flat pupils, pure-white sclera, and rigid catchlights with layered eye detail and a soft natural gaze.",
+            "Keep each pupil naturally dark and sized for the ambient light, with a clearly visible textured iris surrounding it.",
+            "Add soft environment-shaped reflections to the transparent convex cornea so they extend across the iris and pupil rather than appearing as a painted dot.",
+            "Restore the thin tear-film waterline, upper-lid shadow on the sclera, lower-lid anatomy, and real under-eye texture.",
             "Lower excessive sharpening, saturation, and beauty-filter whitening.",
             "Unify face, hair, clothing, and background under one plausible light direction.",
         ),
         negative_rules=(
             "No poreless plastic skin or artificial beauty-filter face reshaping.",
-            "No glassy empty eyes, pure-white sclera, mirrored catchlights, or fixed straight-ahead stare.",
+            "No oversized black-dot pupils that hide the iris, and no invented color or texture inside the pupil itself.",
+            "No glassy empty eyes, pure-white sclera, painted-dot highlights, mirrored reflections, or fixed straight-ahead stare.",
             "No shadowless studio-perfect lighting unless explicitly requested.",
             "No CGI, render, poster, or hyper-clean commercial sample look.",
         ),
@@ -446,13 +484,13 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
         realism_rules=(
             "Keep campus context, crowds, signage, gown fabric folds, flowers, and ground shadows.",
             "Tone down overly blue sky, neon flowers, and overly vivid academic robe colors.",
-            "Keep visible eyes moist but not tearful, with natural catchlights, iris detail, and soft emotional focus.",
+            "Keep visible irises distinct from naturally sized dark pupils, with outdoor corneal reflections and soft emotional focus.",
             "Keep the subject attractive but not excessively retouched.",
         ),
         edit_rules=(
             "Reduce over-bright highlights and overly saturated campus colors.",
             "Make skin, hands, hair, gown edges, bouquet wrap, and shoes physically believable.",
-            "If the eyes are visible, restore subtle tear-film sheen, iris depth, natural catchlights, and under-eye shadows.",
+            "If the eyes are visible, restore iris-pupil separation, corneal reflections, a thin waterline, and under-eye shadows.",
             "Keep the candid graduation-day atmosphere instead of a poster-template look.",
         ),
         negative_rules=(
@@ -491,13 +529,13 @@ SCENARIO_CONFIGS: Mapping[str, ScenarioConfig] = {
         realism_rules=(
             "Preserve all redactions and never infer hidden names, numbers, addresses, or records.",
             "Keep card edges, lamination, paper or plastic texture, shadows, and hand pressure realistic.",
-            "Keep visible eyes neutral and anatomically detailed, with restrained catchlights and natural under-eye shadows.",
+            "Keep visible irises distinct from naturally sized dark pupils, with restrained corneal reflections and natural under-eye shadows.",
             "Use practical document-photo realism rather than a generated prop look.",
         ),
         edit_rules=(
             "Preserve and strengthen privacy masking; do not restore covered text or faces.",
             "Realize card thickness, edge shadows, lamination, and hand pressure.",
-            "If a face is visible, keep off-white sclera, iris detail, subtle tear-film sheen, and a neutral non-staring gaze.",
+            "If a face is visible, keep off-white shaded sclera, iris-pupil separation, restrained corneal reflection, a thin waterline, and a neutral coherent gaze.",
             "Keep phone close-up depth of field readable but naturally soft in the background.",
         ),
         negative_rules=(
@@ -797,7 +835,7 @@ def humanize_prompt(
         )
 
     subject = _clean_subject(raw_text, selected_mode)
-    corrections = _build_corrections(features, intensity)
+    corrections = _build_corrections(features, intensity, selected_mode)
     config = SCENARIO_CONFIGS[selected_mode]
     realistic_prompt = _normalize_output(
         config.template.format(
@@ -1132,13 +1170,22 @@ def _remove_leading_prompt_words(text: str, scenario: str) -> str:
     return _normalize_spaces(cleaned)
 
 
-def _build_corrections(features: Sequence[AIFeature], intensity: float) -> str:
+def _build_corrections(
+    features: Sequence[AIFeature],
+    intensity: float,
+    scenario: str | None = None,
+) -> str:
     if not features:
         return ""
 
     max_items = 3 if intensity < 0.67 else 5
     hints: list[str] = []
     for feature in sorted(features, key=lambda item: item.score, reverse=True):
+        if (
+            feature.name == "empty_or_overperfect_eyes"
+            and scenario in {"portrait", "graduation", "id_photo"}
+        ):
+            continue
         hint = feature.replacement_hint
         if hint not in hints:
             hints.append(hint)

@@ -59,21 +59,30 @@ class RealShotNaturalizerTests(unittest.TestCase):
         lowered = result.lower()
 
         self.assertIn("empty_or_overperfect_eyes", features)
-        self.assertIn("detailed irises", lowered)
+        self.assertIn("iris surrounding a naturally sized dark pupil", lowered)
+        self.assertIn("radial iris fibers", lowered)
+        self.assertIn("transparent convex corneal surface", lowered)
+        self.assertIn("reflections across the iris and pupil", lowered)
         self.assertIn("tear-film sheen", lowered)
-        self.assertIn("light-consistent catchlights", lowered)
-        self.assertIn("soft non-staring gaze", lowered)
-        self.assertIn("real under-eye shadows", lowered)
+        self.assertIn("lower-lid waterline", lowered)
+        self.assertIn("upper-lid shadow", lowered)
+        self.assertIn("coherent binocular gaze", lowered)
+        self.assertNotIn("pupil tonal variation", lowered)
         self.assertNotIn("lifeless eyes", lowered)
         self.assertNotIn("pure white sclera", lowered)
         self.assertNotIn("rigid catchlights", lowered)
+        self.assertNotIn("no visible iris", transform_prompt(
+            "Portrait of a woman with only 1 black pupil, no visible iris, "
+            "eyes without natural reflections"
+        ).lower())
 
     def test_detects_chinese_empty_eye_language(self) -> None:
         features = detect_ai_features(
-            "人像照片，眼神空洞，眼白太白，眼神光过于僵硬，只有黑色瞳孔"
+            "眼睛只有1个黑色的瞳孔，看不见虹膜细节，眼球没有自然反光"
         )
 
         self.assertEqual(features, ("empty_or_overperfect_eyes",))
+        self.assertEqual(infer_scenario("眼睛只有1个黑色的瞳孔"), "portrait")
 
     def test_plain_scene_prefix_does_not_become_subject(self) -> None:
         result = transform_prompt(
@@ -153,9 +162,12 @@ class RealShotNaturalizerTests(unittest.TestCase):
             mode="portrait",
         )
 
-        self.assertIn("flat pupils", instruction)
-        self.assertIn("subtle tear-film sheen", instruction)
-        self.assertIn("under-eye shadows", instruction)
+        self.assertIn("pupil naturally dark", instruction)
+        self.assertIn("textured iris surrounding it", instruction)
+        self.assertIn("transparent convex cornea", instruction)
+        self.assertIn("thin tear-film waterline", instruction)
+        self.assertIn("real under-eye texture", instruction)
+        self.assertIn("no invented color or texture inside the pupil", instruction.lower())
         self.assertNotIn("Source scene: Portrait and a", instruction)
 
     def test_blocks_detection_evasion_request(self) -> None:

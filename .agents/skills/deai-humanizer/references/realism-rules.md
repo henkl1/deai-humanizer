@@ -19,13 +19,23 @@
 
 Apply these rules whenever a face has visible eyes:
 
-- Diagnose synthetic eyes by looking for flat black pupils, missing iris variation, pure-white sclera, rigid or mirrored catchlights, a dry glassy surface, fixed straight-ahead staring, and missing lower-lid or under-eye shadows.
-- Keep layered iris texture and pupil tonal variation. Use naturally off-white sclera with restrained local color variation; do not exaggerate veins or redness.
-- Add a subtle moist tear-film or waterline sheen, especially along the lower lid. Keep it understated so the person does not look tearful unless the scene calls for that emotion.
-- Make catchlights small, soft, and consistent with the scene's actual window, street, or room light. Left and right reflections may differ slightly with eye angle and anatomy.
+- Treat the pupil correctly: it is a naturally dark aperture, not a surface that needs texture. Size it for the scene's light and keep both pupils plausibly consistent. Do not let a large black disk erase the surrounding iris.
+- Keep the iris clearly visible around the pupil. Show restrained radial fibers, crypts, a darker outer limbal ring, a subtle inner ring, and small color variations without making the iris look illustrated or over-sharpened.
+- Model the cornea as a transparent convex surface over both iris and pupil. Place soft, environment-shaped window, street, or room reflections across that surface; do not paint a single white dot inside the pupil.
+- Keep left and right corneal reflections consistent with one light source but slightly different in shape or position because of eye angle and anatomy. Avoid perfectly mirrored highlights.
+- Add a thin moist tear-film sheen and a narrow lower-lid waterline. Keep the wetness subtle so the person does not look tearful unless the intended emotion calls for it.
+- Use naturally off-white sclera with upper-lid shadow, mild warm or cool variation, and restrained tiny vessels when resolution supports them. Avoid pure white or uniformly bright eye whites.
+- Preserve eyelid anatomy: upper-lid occlusion over the iris, lower-lid rim, inner-corner tear duct, irregular eyelashes, tiny lash shadows, and real skin transition around the eye.
 - Preserve lower-lid structure, real under-eye shadow, mild skin variation, and slight fatigue when appropriate instead of erasing the whole eye area.
-- Use a soft, emotionally present gaze rather than a rigid, direct stare. Preserve the subject's intended identity, gaze direction, and expression.
-- Avoid glass eyes, doll-like eyes, pure-white eye whites, identical catchlights, featureless pupils, excessive wetness, or artificial tears.
+- Keep both eyes aimed at one plausible fixation point. Preserve the intended gaze direction and expression without a rigid stare, crossed eyes, or diverging pupils.
+- Scale detail to framing. In close-ups and headshots, use the full eye stack above. In medium or wide shots, prioritize pupil size, visible iris, corneal reflection, coherent gaze, and eyelid shadow; do not force microscopic iris fibers that the camera could not resolve.
+- Avoid glass eyes, doll-like eyes, oversized black-dot pupils, missing irises, pure-white sclera, painted-dot highlights, identical reflections, excessive wetness, artificial tears, or invented texture inside the pupil.
+
+For a close-up or headshot, reuse this correction block:
+
+```text
+Preserve the person's identity, eye shape, eye color, gaze direction, and expression. Keep each pupil as a naturally dark aperture sized for the ambient light, with a clearly visible iris surrounding it. Restore restrained radial iris fibers, crypts, limbal-ring depth, and subtle color variation. Model the cornea as a transparent convex surface and place soft environment-shaped reflections across both the iris and pupil, consistent with the actual window or room light rather than a painted white dot. Add a thin tear-film sheen and lower-lid waterline, upper-lid shadow over naturally off-white sclera, realistic eyelid rims and lashes, coherent binocular gaze, and natural under-eye texture with slight fatigue. Do not enlarge the pupils until the iris disappears, add detail inside the pupil, change eye color, exaggerate veins, or make the eyes tearful.
+```
 
 ## Graduation
 

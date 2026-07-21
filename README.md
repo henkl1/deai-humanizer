@@ -9,6 +9,7 @@ It is not a tool for bypassing AI detectors, removing watermarks, stripping meta
 ## Features
 
 - Detects AI-looking prompt features such as plastic skin, empty or over-perfect eyes, perfect lighting, over-saturation, over-sharpening, symmetry, render jargon, and overly clean environments.
+- Rebuilds visible eyes with correct iris-pupil separation, transparent corneal reflections, a subtle tear-film waterline, scleral shading, eyelid anatomy, and coherent gaze.
 - Rewrites prompts into realistic camera photography prompts.
 - Builds paste-ready edit instructions for existing image editors.
 - Supports portrait, graduation, ID/document photo, street/lifestyle, product, interior, and generic scenes.
